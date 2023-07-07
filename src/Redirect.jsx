@@ -27,7 +27,7 @@ export default function Redirect() {
     }, [])
     return (
       <div>
-        Not Found!
+        Redirecting...
       </div>
   );
 }

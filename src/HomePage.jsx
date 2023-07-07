@@ -1,23 +1,33 @@
 import React from "react"
 import { useState, useEffect } from "react";
-import { nanoid } from "nanoid"
-import { getFirestore, collection, onSnapshot, addDoc } from "firebase/firestore"
-import { firebaseConfig } from './firebase'
+import { onSnapshot, addDoc } from "firebase/firestore"
 import { linksCollection } from './firebase'
 import { generateId } from "./random";
+import "./HomePage.css"
+
+export const domainName = "http://localhost:5173/"
+
+function validateUrl(url){
+  // if url doesn't start with http, add http
+  if (!url.startsWith("http://") && !url.startsWith("https://")){
+      return `https://${url}`
+  }
+  return url
+}
 
 export default function HomePage() {
     const [inputValue, setInputValue] = useState('');
-  
+    const [shortUrl, setShortUrl] = useState('')
+
     const handleSubmit = async (event) => {
       event.preventDefault();
       
       const newLink = {
-        longUrl: inputValue,
+        longUrl: validateUrl(inputValue),
         shortUrl: generateId(6)
       }
       await addDoc(linksCollection, newLink)
-      
+      setShortUrl(domainName+newLink.shortUrl)
       // Reset the input value
       setInputValue('');
     };
@@ -39,7 +49,11 @@ export default function HomePage() {
         handleSubmit(event);
       }
     };
-  
+    const copy = async () => {
+      await navigator.clipboard.writeText(shortUrl);
+      alert('Text copied');
+    }
+
     return (
       <div className='container'>
         <h1>Shorten Links</h1>
@@ -53,6 +67,12 @@ export default function HomePage() {
           />
           <button type="submit">Shorten it</button>
         </form>
+
+        <div className="output">
+          <span id="uneditableText">{shortUrl}</span>
+          <button id="copyButton" onClick={copy}>Copy</button>
+        </div>
+
       </div>
     );
   }
