@@ -1,0 +1,31 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+
+  background-color: antiquewhite;
+
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+}
+
+form {
+  width: 70%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+}
+
+form > input {
+  height: 30px;
+}
+
+form > button {
+  background-color: red;
+  color: white;
+}
