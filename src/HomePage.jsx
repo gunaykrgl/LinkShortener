@@ -4,6 +4,7 @@ import { nanoid } from "nanoid"
 import { getFirestore, collection, onSnapshot, addDoc } from "firebase/firestore"
 import { firebaseConfig } from './firebase'
 import { linksCollection } from './firebase'
+import { generateId } from "./random";
 
 export default function HomePage() {
     const [inputValue, setInputValue] = useState('');
@@ -13,7 +14,7 @@ export default function HomePage() {
       
       const newLink = {
         longUrl: inputValue,
-        shortUrl: nanoid()
+        shortUrl: generateId(6)
       }
       await addDoc(linksCollection, newLink)
       
