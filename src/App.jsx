@@ -4,59 +4,23 @@ import { nanoid } from "nanoid"
 import { getFirestore, collection, onSnapshot, addDoc } from "firebase/firestore"
 import { firebaseConfig } from './firebase'
 import { linksCollection } from './firebase'
-function App() {
-  const [inputValue, setInputValue] = useState('');
+import HomePage from './HomePage'
+import Redirect from './Redirect'
 
-  // Link pairs
-  const [linkPairs, setLinkPairs] = useState([])
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    
-    const newLink = {
-      longUrl: inputValue,
-      shortUrl: nanoid()
-    }
-    await addDoc(linksCollection, newLink)
-    
-    // Reset the input value
-    setInputValue('');
-  };
-  useEffect(()=>{
-    const unsubscribe = onSnapshot(linksCollection, function(snapshot){
-      const linksArr = snapshot.docs.map(doc =>({
-        ...doc.data()
-      }))
-      setLinkPairs(linksArr)
-    })
-    return unsubscribe
-  }, [])
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
+function App(){
+  return     (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />}/>
+        <Route path="/:id" element={<Redirect />}/>
+      </Routes>
+    </BrowserRouter>
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      handleSubmit(event);
-    }
-  };
+    )
 
-  return (
-    <div className='container'>
-      <h1>Shorten Links</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Enter long url"
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-        />
-        <button type="submit">Shorten it</button>
-      </form>
-    </div>
-  );
 }
 
 export default App
