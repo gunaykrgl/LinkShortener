@@ -6,7 +6,8 @@ import { generateId } from "./random";
 import "./HomePage.css"
 import Alert from "./Alert";
 
-export const domainName = "http://localhost:5173/"
+const domainName = "https://link-shortener-50284.web.app/"
+// const domainName = "http://localhost:5173/"
 
 function validateUrl(url){
   // if url doesn't start with http, add http
@@ -29,18 +30,18 @@ export default function HomePage() {
         shortUrl: generateId(6)
       }
       await addDoc(linksCollection, newLink)
-      setShortUrl(domainName+newLink.shortUrl)
+      setShortUrl(newLink.shortUrl)
       // Reset the input value
       setInputValue('');
     };
-    useEffect(()=>{
-      const unsubscribe = onSnapshot(linksCollection, function(snapshot){
-        const linksArr = snapshot.docs.map(doc =>({
-          ...doc.data()
-        }))
-      })
-      return unsubscribe
-    }, [])
+    // useEffect(()=>{
+    //   const unsubscribe = onSnapshot(linksCollection, function(snapshot){
+    //     const linksArr = snapshot.docs.map(doc =>({
+    //       ...doc.data()
+    //     }))
+    //   })
+    //   return unsubscribe
+    // }, [])
   
     const handleInputChange = (event) => {
       setInputValue(event.target.value);
@@ -51,8 +52,9 @@ export default function HomePage() {
         handleSubmit(event);
       }
     };
+
     const copy = async () => {
-      await navigator.clipboard.writeText(shortUrl);
+      await navigator.clipboard.writeText(domainName+shortUrl);
       setShowAlert(true)
       timer = setTimeout(()=>{
         setShowAlert(false)
@@ -76,7 +78,7 @@ export default function HomePage() {
           </form>
 
           <div className="output">
-            <span id="uneditableText">{shortUrl}</span>
+            <span id="uneditableText">{shortUrl&&domainName+shortUrl}</span>
             <button id="copyButton" onClick={copy}>Copy</button>
           </div>
           {showAlert &&  <Alert  />}

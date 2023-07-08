@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { linksCollection } from './firebase';
-import { QuerySnapshot, onSnapshot } from 'firebase/firestore';
+import { onSnapshot } from 'firebase/firestore';
 
 function validateUrl(url){
     // if url doesn't start with http, add http
