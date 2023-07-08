@@ -1,16 +1,12 @@
 .container {
   width: 100vw;
-  height: 100vh;
-
-  background-color: antiquewhite;
-
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-
-  align-items: center;
+  place-items: center;
   justify-content: center;
+  margin-top: 40%;
+  gap: 10px;
 }
 
 form {
@@ -29,4 +25,15 @@ form > input {
 form > button {
   background-color: red;
   color: white;
+}
+
+.output {
+  display: flex;
+
+  gap: 10px;
+  align-items: center;
+}
+
+.output * {
+  flex: 0 0 auto;
 }

@@ -4,6 +4,7 @@ import { onSnapshot, addDoc } from "firebase/firestore"
 import { linksCollection } from './firebase'
 import { generateId } from "./random";
 import "./HomePage.css"
+import Alert from "./Alert";
 
 export const domainName = "http://localhost:5173/"
 
@@ -18,6 +19,7 @@ function validateUrl(url){
 export default function HomePage() {
     const [inputValue, setInputValue] = useState('');
     const [shortUrl, setShortUrl] = useState('')
+    const [showAlert, setShowAlert] = useState(false)
 
     const handleSubmit = async (event) => {
       event.preventDefault();
@@ -51,28 +53,34 @@ export default function HomePage() {
     };
     const copy = async () => {
       await navigator.clipboard.writeText(shortUrl);
-      alert('Text copied');
+      setShowAlert(true)
+      timer = setTimeout(()=>{
+        setShowAlert(false)
+      }, 1000)
+      clearTimeout(timer)
     }
 
     return (
-      <div className='container'>
-        <h1>Shorten Links</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Enter long url"
-            value={inputValue}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-          />
-          <button type="submit">Shorten it</button>
-        </form>
+      <>
+        <div className='container'>
+          <h1>Shorten Links</h1>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Enter long url"
+              value={inputValue}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+            />
+            <button type="submit">Shorten it</button>
+          </form>
 
-        <div className="output">
-          <span id="uneditableText">{shortUrl}</span>
-          <button id="copyButton" onClick={copy}>Copy</button>
+          <div className="output">
+            <span id="uneditableText">{shortUrl}</span>
+            <button id="copyButton" onClick={copy}>Copy</button>
+          </div>
+          {showAlert &&  <Alert  />}
         </div>
-
-      </div>
+      </>
     );
   }
