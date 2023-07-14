@@ -7,10 +7,11 @@
   margin-top: 10%;
   gap: 10px;
 }
+.container form {
+  width: 70%;
+}
 
 form {
-  width: 70%;
-
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -36,4 +37,9 @@ form > button {
 
 .output * {
   flex: 0 0 auto;
+}
+
+.copyButton {
+  background-color: aqua;
+  
 }

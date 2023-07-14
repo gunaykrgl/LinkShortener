@@ -1,6 +1,6 @@
 import React from "react"
 import { useState, useEffect } from "react";
-import { onSnapshot, addDoc, deleteDoc } from "firebase/firestore"
+import { addDoc } from "firebase/firestore"
 import { linksCollection } from './firebase'
 import { generateId } from "./random";
 import "./HomePage.css"
@@ -22,12 +22,11 @@ function validateUrl(url){
   return url
 }
 
-
 export default function HomePage() {
     const [inputValue, setInputValue] = useState('');
-    const [alertText, setAlertText] = useState('')
     const [shortUrl, setShortUrl] = useState('')
     const [showAlert, setShowAlert] = useState(false)
+    const [alertText, setAlertText] = useState('')
 
     useEffect(()=>{
       setShowAlert(true)
@@ -71,7 +70,6 @@ export default function HomePage() {
     }
 
     return (
-      <>
         <div className='container'>
           <h1>Shorten Links</h1>
           <form onSubmit={handleSubmit}>
@@ -86,11 +84,10 @@ export default function HomePage() {
           </form>
 
           <div className="output">
-            <span id="uneditableText">{shortUrl&&domainName+shortUrl}</span>
-            <button id="copyButton" onClick={copy}>Copy</button>
+            <button className="copyButton" onClick={copy}>Copy</button>
+            <a href={domainName+shortUrl}>{shortUrl && domainName+shortUrl}</a>
           </div>
           {showAlert &&  <Alert text={alertText}/>}
         </div>
-      </>
     );
   }
