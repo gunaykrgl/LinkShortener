@@ -22,11 +22,20 @@ function validateUrl(url){
   return url
 }
 
+
 export default function HomePage() {
     const [inputValue, setInputValue] = useState('');
-    
+    const [alertText, setAlertText] = useState('')
     const [shortUrl, setShortUrl] = useState('')
     const [showAlert, setShowAlert] = useState(false)
+
+    useEffect(()=>{
+      setShowAlert(true)
+      clearTimeout(timer)
+      timer = setTimeout(()=>{
+        setShowAlert(false)
+      }, 1000)
+    }, [alertText])
 
     const handleSubmit = async (event) => {
       event.preventDefault();
@@ -40,6 +49,9 @@ export default function HomePage() {
         setShortUrl(newLink.ID)
         // Reset the input value
         setInputValue('');
+      }
+      else {
+        setAlertText("Not a valid link")
       }
     };
   
@@ -55,11 +67,7 @@ export default function HomePage() {
 
     const copy = async () => {
       await navigator.clipboard.writeText(domainName+shortUrl);
-      setShowAlert(true)
-      clearTimeout(timer)
-      timer = setTimeout(()=>{
-        setShowAlert(false)
-      }, 1000)
+      setAlertText("Copied to the clipboard.")
     }
 
     return (
@@ -81,7 +89,7 @@ export default function HomePage() {
             <span id="uneditableText">{shortUrl&&domainName+shortUrl}</span>
             <button id="copyButton" onClick={copy}>Copy</button>
           </div>
-          {showAlert &&  <Alert />}
+          {showAlert &&  <Alert text={alertText}/>}
         </div>
       </>
     );
