@@ -1,13 +1,18 @@
 import React from "react"
 import { useState, useEffect } from "react";
-import { onSnapshot, addDoc } from "firebase/firestore"
+import { onSnapshot, addDoc, deleteDoc } from "firebase/firestore"
 import { linksCollection } from './firebase'
 import { generateId } from "./random";
 import "./HomePage.css"
 import Alert from "./Alert";
 
 const domainName = "https://link-shortener-50284.web.app/"
-// const domainName = "http://localhost:5173/"
+let timer;
+
+function isLink(str){
+  const urlPattern = /^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})(\/\S*)?$/i;
+  return urlPattern.test(str);
+}
 
 function validateUrl(url){
   // if url doesn't start with http, add http
@@ -19,29 +24,24 @@ function validateUrl(url){
 
 export default function HomePage() {
     const [inputValue, setInputValue] = useState('');
+    
     const [shortUrl, setShortUrl] = useState('')
     const [showAlert, setShowAlert] = useState(false)
 
     const handleSubmit = async (event) => {
       event.preventDefault();
-      
-      const newLink = {
-        longUrl: validateUrl(inputValue),
-        shortUrl: generateId(6)
+      if (isLink(inputValue)) {
+        const newLink = {
+          longUrl: validateUrl(inputValue),
+          ID: generateId(6)
+        }
+  
+        await addDoc(linksCollection, newLink)
+        setShortUrl(newLink.ID)
+        // Reset the input value
+        setInputValue('');
       }
-      await addDoc(linksCollection, newLink)
-      setShortUrl(newLink.shortUrl)
-      // Reset the input value
-      setInputValue('');
     };
-    // useEffect(()=>{
-    //   const unsubscribe = onSnapshot(linksCollection, function(snapshot){
-    //     const linksArr = snapshot.docs.map(doc =>({
-    //       ...doc.data()
-    //     }))
-    //   })
-    //   return unsubscribe
-    // }, [])
   
     const handleInputChange = (event) => {
       setInputValue(event.target.value);
@@ -56,10 +56,10 @@ export default function HomePage() {
     const copy = async () => {
       await navigator.clipboard.writeText(domainName+shortUrl);
       setShowAlert(true)
+      clearTimeout(timer)
       timer = setTimeout(()=>{
         setShowAlert(false)
       }, 1000)
-      clearTimeout(timer)
     }
 
     return (
@@ -81,7 +81,7 @@ export default function HomePage() {
             <span id="uneditableText">{shortUrl&&domainName+shortUrl}</span>
             <button id="copyButton" onClick={copy}>Copy</button>
           </div>
-          {showAlert &&  <Alert  />}
+          {showAlert &&  <Alert />}
         </div>
       </>
     );
