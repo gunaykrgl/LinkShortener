@@ -19,6 +19,6 @@ A basic React-router app for generating a short URL for a longer URL
 
 
 ## Usage
-
+- The site is live at: https://link-shortener-50284.web.app/
 - To generate a short URL, type your long URL to the text box and press the "Shorten it" button
 
